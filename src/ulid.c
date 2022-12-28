@@ -2,6 +2,10 @@
  *
  * This is free and unencumbered software released into the public domain.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifdef _WIN32
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
@@ -128,7 +132,7 @@ ulid_generator_init(struct ulid_generator *g, int flags)
 }
 
 void
-ulid_encode(char str[27], const unsigned char ulid[16])
+ulid_encode(char str[26], const unsigned char ulid[16])
 {
     static const char set[256] = {
         0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
@@ -190,7 +194,6 @@ ulid_encode(char str[27], const unsigned char ulid[16])
     str[23] = set[ ulid[14] >> 2];
     str[24] = set[(ulid[14] << 3 | ulid[15] >> 5) & 0x1f];
     str[25] = set[ ulid[15] >> 0];
-    str[26] = 0;
 }
 
 int
@@ -255,7 +258,7 @@ ulid_decode(unsigned char ulid[16], const char *s)
 }
 
 void
-ulid_generate(struct ulid_generator *g, char str[27])
+ulid_generate(struct ulid_generator *g, char str[26])
 {
     unsigned long long ts = platform_utime(1) / 1000;
 
@@ -291,3 +294,7 @@ ulid_generate(struct ulid_generator *g, char str[27])
 
     ulid_encode(str, g->last);
 }
+
+#ifdef __cplusplus
+}
+#endif
